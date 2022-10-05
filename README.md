@@ -34,6 +34,12 @@ $ npm install
 
 ## Running the app
 
+```database
+$ yarn db:dev:restart
+
+$ yarn prisma:dev:deploy
+```
+
 ```bash
 # development
 $ npm run start
