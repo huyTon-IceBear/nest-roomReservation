@@ -21,22 +21,32 @@ model User {
   firstName String?
   lastName  String?
 
-  bookmarks Bookmark[]
+  reservations Reservation[]
 
   @@map("users")
 }
 
-model Bookmark {
+model Reservation {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  createdAt DateTime
   updatedAt DateTime @updatedAt
 
-  title       String
   description String?
-  link        String
+  userId      Int
+  roomId      Int
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Room        Room    @relation(fields: [roomId], references: [id])
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("reservations")
+}
 
-  @@map("bookmarks")
+model Room {
+  id Int @id @default(autoincrement())
+
+  roomNr      String        @unique
+  floor       Int
+  description String?
+  Reservation Reservation[]
+
+  @@map("rooms")
 }

@@ -14,6 +14,18 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
+  async createSampleData() {
+    //generate hash pass
+    for (let index = 0; index < 5; index++) {
+      const hash = '123' + index;
+      await this.prisma.user.create({
+        data: {
+          email: 'kaoks@gmai.com',
+          hash,
+        },
+      });
+    }
+  }
   async signup(dto: AuthDto) {
     try {
       //generate hash pass
