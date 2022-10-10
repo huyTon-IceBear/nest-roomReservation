@@ -1,34 +1,60 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ReservationService } from './reservation.service';
-import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { CreateReservationDto, UpdateReservationDto } from './dto';
+import { JwtGuard } from '../auth/guard';
+import { GetUser } from '../auth/decorator';
 
-@Controller('reservation')
+@UseGuards(JwtGuard)
+@Controller('reservations')
 export class ReservationController {
-  constructor(private readonly reservationService: ReservationService) {}
-
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationService.create(createReservationDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.reservationService.findAll();
-  }
+  constructor(private reservationService: ReservationService) {}
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reservationService.findOne(+id);
+  getReservationById(
+    @GetUser('id') userId: number,
+    @Query('reservationId', ParseIntPipe) reservationId: number,
+  ) {
+    return this.reservationService.getReservationsById(userId, reservationId);
+  }
+
+  @Post()
+  createReservation(
+    @GetUser('id') userId: number,
+    @Query('roomId', ParseIntPipe) roomId: number,
+    @Body() dto: CreateReservationDto,
+  ) {
+    return this.reservationService.createReservation(userId, roomId, dto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
-    return this.reservationService.update(+id, updateReservationDto);
+  editReservation(
+    @GetUser('id') userId: number,
+    @Query('reservationId', ParseIntPipe) reservationId: number,
+    @Body() updateReservationDto: UpdateReservationDto,
+  ) {
+    return this.reservationService.editReservation(
+      userId,
+      reservationId,
+      updateReservationDto,
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservationService.remove(+id);
+  deleteReservationById(
+    @GetUser('id') userId: number,
+    @Query('reservationId', ParseIntPipe) reservationId: number,
+  ) {
+    return this.reservationService.deleteReservationById(userId, reservationId);
   }
 }

@@ -15,11 +15,7 @@ CREATE TABLE "users" (
 CREATE TABLE "reservations" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "title" TEXT NOT NULL,
     "description" TEXT,
-    "link" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "reservations_pkey" PRIMARY KEY ("id")
 );
@@ -41,6 +37,3 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "rooms_roomNr_key" ON "rooms"("roomNr");
-
--- AddForeignKey
-ALTER TABLE "reservations" ADD CONSTRAINT "reservations_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

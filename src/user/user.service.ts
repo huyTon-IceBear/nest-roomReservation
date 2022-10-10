@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
 
@@ -19,5 +23,13 @@ export class UserService {
     delete user.hash;
 
     return user;
+  }
+
+  async removeUser(userId: any) {
+    const user = await this.prisma.user.delete({
+      where: { id: Number(userId) },
+    });
+
+    return user.email + 'account is delete';
   }
 }
